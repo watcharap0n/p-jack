@@ -15,12 +15,12 @@ app.include_router(
     responses={418: {'description': "I'm a teapot"}}
 )
 
-# app.include_router(
-#     callback.router,
-#     prefix='/callback',
-#     tags=['Callback'],
-#     responses={418: {'description': "I'm a teapot"}}
-# )
+app.include_router(
+    callback.router,
+    prefix='/callback',
+    tags=['Callback'],
+    responses={418: {'description': "I'm a teapot"}}
+)
 
 
 @app.get('/index')
