@@ -14,3 +14,4 @@ config/__pycache__/heroku_environ.cpython-39.pyc
 config/__pycache__/object_str.cpython-39.pyc
 *.pyc
 config/firebase.json
+config/client.py

@@ -2,12 +2,30 @@ new Vue({
     el: '#app',
     vuetify: new Vuetify(),
     data: {
-        esp: []
+        esp: [],
+        user: {}
     },
-    created() {
-        this.initialized();
+    async created() {
+        await this.initializedLIFF()
+        await this.initialized();
     },
     methods: {
+        initializedLIFF() {
+            liff.init({liffId: '1656545825-Dg2zr4BQ'}, () => {
+                    if (liff.isLoggedIn()) {
+                        liff.getProfile()
+                            .then((profile) => {
+                                this.user.user_id = profile.userId
+                                this.user.display_name = profile.displayName
+                                this.user.img = profile.pictureUrl
+                                this.user.email = liff.getDecodedIDToken().email
+                            })
+                    } else {
+                        liff.login();
+                    }
+                }
+            )
+        },
         initialized() {
             axios.get('/esp')
                 .then((res) => {

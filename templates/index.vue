@@ -47,11 +47,11 @@
           <v-row>
             <v-avatar>
               <img
-                  src="https://cdn.vuetifyjs.com/images/john.jpg"
-                  alt="John"
+                  :src="user.img"
+                  alt="NaN"
               >
             </v-avatar>
-            <h6 style="margin-left: 10px; margin-top: 10px">User: Kane</h6>
+            <h6 style="margin-left: 10px; margin-top: 10px">User: [[user.display_name]]</h6>
           </v-row>
 
           <div class="my-4 text-subtitle-1">
