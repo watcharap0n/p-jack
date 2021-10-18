@@ -1,0 +1,16 @@
+log
+Pipfile.lock
+docker-compose.yml
+Dockerfile
+.idea
+_pycache__
+.gitattributes
+confih/__pycache__
+*.xml
+__pycache__/app.cpython-39.pyc
+config/__pycache__/db_firebase.cpython-39.pyc
+config/__pycache__/db_pymongo.cpython-39.pyc
+config/__pycache__/heroku_environ.cpython-39.pyc
+config/__pycache__/object_str.cpython-39.pyc
+*.pyc
+config/firebase.json
