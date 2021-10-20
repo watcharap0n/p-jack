@@ -48,7 +48,7 @@ def get_profile(user_id):
     return result
 
 
-@router.post('/')
+@router.post('/webhook')
 async def callback_notify(
         request: Request,
         raw_json: Optional[dict] = Body(None)
