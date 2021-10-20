@@ -26,7 +26,3 @@ app.include_router(
 @app.get('/index')
 async def index(request: Request):
     return template.TemplateResponse('index.vue', context={'request': request})
-
-
-if __name__ == '__main__':
-    uvicorn.run('app:app', port=8050, debug=True)

@@ -23,7 +23,7 @@
     class="overflow-y-auto"
     height="800px"
 >
-  <v-card v-for="(v,i) in esp" :key="i">
+  <v-card v-for="(v,i) in esp" :key="i" :loading="!spinCard">
     <v-card-title>[[v.elc]]</v-card-title>
     <v-card-text>
       <div class="my-4 text-subtitle-1">
@@ -37,6 +37,7 @@
               dark
               large
               :color="v.status === true ? 'success' : 'error'"
+              @click="ticket({'id': i, 'status': v.status})"
           >
             <v-icon dark>
               mdi-power

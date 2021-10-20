@@ -3,7 +3,8 @@ new Vue({
     vuetify: new Vuetify(),
     data: {
         esp: [],
-        user: {}
+        user: {},
+        spinCard: false
     },
     async created() {
         await this.initializedLIFF()
@@ -27,9 +28,11 @@ new Vue({
             )
         },
         initialized() {
+            this.spinCard = false
             axios.get('/esp')
                 .then((res) => {
                     this.esp = res.data
+                    this.spinCard = true
                 })
                 .catch((err) => {
                     this.esp = [
@@ -58,9 +61,53 @@ new Vue({
                             sensor: null
                         }
                     ]
+                    this.spinCard = true
                     console.error(err)
                 })
         },
+        ticket(obj) {
+            this.spinCard = false
+            if (obj.id === 0) {
+                if (obj.status) {
+                    this.updateVal(4)
+                } else if (obj.status) {
+                    this.updateVal(3)
+                }
+            }
+            if (obj.id === 1) {
+                if (obj.status) {
+                    this.updateVal(6)
+                } else if (obj.status) {
+                    this.updateVal(5)
+                }
+            }
+            if (obj.id === 2) {
+                if (obj.status) {
+                    this.updateVal(7)
+                } else if (obj.status) {
+                    this.updateVal(8)
+                }
+            }
+            if (obj.id === 3) {
+                if (obj.status) {
+                    this.updateVal(9)
+                } else if (obj.status) {
+                    this.updateVal(10)
+                }
+            }
+        },
+        updateVal(val) {
+            axios.get(`/esp?relay=${val}`)
+                .then((res) => {
+                    this.esp = res.data
+                    this.spinCard = true
+                })
+                .catch((err) => {
+                    console.log(err)
+                    this.spinCard = true
+                })
+        }
+
     },
     delimiters: ["[[", "]]"]
 })
