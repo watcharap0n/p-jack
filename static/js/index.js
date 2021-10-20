@@ -9,6 +9,10 @@ new Vue({
     async created() {
         await this.initializedLIFF()
         await this.initialized();
+        setInterval(
+            function () {
+                this.sensors();
+            }.bind(this), 5000);
     },
     methods: {
         initializedLIFF() {
@@ -65,33 +69,71 @@ new Vue({
                     console.error(err)
                 })
         },
+        sensors() {
+            axios.get('/esp')
+                .then((res) => {
+                    console.log('get')
+                    this.esp = res.data
+                })
+                .catch((err) => {
+                    this.esp = [
+                        {
+                            elc: 'Lost Connect...',
+                            description: 'Lost Connect...',
+                            status: false,
+                            sensor: null
+                        },
+                        {
+                            elc: 'Lost Connect...',
+                            description: 'Lost Connect...',
+                            status: false,
+                            sensor: null
+                        },
+                        {
+                            elc: 'Lost Connect...',
+                            description: 'Lost Connect...',
+                            status: false,
+                            sensor: null
+                        },
+                        {
+                            elc: 'Lost Connect...',
+                            description: 'Lost Connect...',
+                            status: false,
+                            sensor: null
+                        }
+                    ]
+                    this.spinCard = true
+                    console.error(err)
+                })
+        },
         ticket(obj) {
+            console.log(obj)
             this.spinCard = false
             if (obj.id === 0) {
                 if (obj.status) {
                     this.updateVal(4)
-                } else if (obj.status) {
+                } else {
                     this.updateVal(3)
                 }
             }
             if (obj.id === 1) {
                 if (obj.status) {
                     this.updateVal(6)
-                } else if (obj.status) {
+                } else {
                     this.updateVal(5)
                 }
             }
             if (obj.id === 2) {
                 if (obj.status) {
                     this.updateVal(7)
-                } else if (obj.status) {
+                } else {
                     this.updateVal(8)
                 }
             }
             if (obj.id === 3) {
                 if (obj.status) {
                     this.updateVal(9)
-                } else if (obj.status) {
+                } else {
                     this.updateVal(10)
                 }
             }

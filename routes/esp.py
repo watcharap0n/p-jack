@@ -94,32 +94,31 @@ async def esp_get(relay: int = None):
             ls2 = before_data.val()['ls2']
             res = obj(ls1, ls2, pump1, 1)
             fb.child('p1').child('switch').update(res)
-
-    sw = fb.child('p1').child('switch').get()
+    ref = fb.child('p1').get()
     data = [
         {
             'elc': 'ไฟตัวที่ 1',
-            'description': num_description(sw.val()['ls1']),
-            'status': num_boolean(sw.val()['ls1']),
-            'sensor': 'Lux: NaN'
+            'description': num_description(ref.val()['switch']['ls1']),
+            'status': num_boolean(ref.val()['switch']['ls1']),
+            'sensor': ref.val()['sensors']['lux']
         },
         {
             'elc': 'ไฟตัวที่ 2',
-            'description': num_description(sw.val()['ls2']),
-            'status': num_boolean(sw.val()['ls2']),
-            'sensor': 'Lux: NaN'
+            'description': num_description(ref.val()['switch']['ls2']),
+            'status': num_boolean(ref.val()['switch']['ls2']),
+            'sensor': ref.val()['sensors']['lux']
         },
         {
             'elc': 'ปั้มตัวที่ 1',
-            'description': num_description(sw.val()['pump1']),
-            'status': num_boolean(sw.val()['pump1']),
-            'sensor': 'lv.water: NaN'
+            'description': num_description(ref.val()['switch']['pump1']),
+            'status': num_boolean(ref.val()['switch']['pump1']),
+            'sensor': ref.val()['sensors']['level_water']
         },
         {
             'elc': 'ปั้มตัวที่ 2',
-            'description': num_description(sw.val()['pump2']),
-            'status': num_boolean(sw.val()['pump2']),
-            'sensor': 'Temperature: NaN'
+            'description': num_description(ref.val()['switch']['pump2']),
+            'status': num_boolean(ref.val()['switch']['pump2']),
+            'sensor': ref.val()['sensors']['temperature']
         },
     ]
     return data
