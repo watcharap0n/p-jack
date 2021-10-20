@@ -5,17 +5,21 @@ from linebot.models import StickerSendMessage, TextSendMessage, TextMessage, Mes
 from random import randint
 from typing import Optional
 from config.object_str import CutId
+from features.flex_message import flex_iot
 from bson import ObjectId
 from config.db_pymongo import MongoDB
+from config.db_firebase import Config_firebase
+from config.heroku_environ import set_firebase
 import datetime
 import json
 import os
-
 
 router = APIRouter()
 
 line_bot_api = LineBotApi(os.environ['line_bot_api'])
 handler = WebhookHandler(os.environ['handler'])
+config = Config_firebase(path_db=set_firebase)
+fb = config.database_fb()
 
 client = os.environ.get('MONGODB_URI')
 db = MongoDB(database_name='Mango', uri=client)
@@ -91,11 +95,36 @@ def event_handler(event):
 
 
 def event_postback(event):
-    pass
+    postback = event['postback']
+    replyToken = event['replyToken']
+    userId = event['source']['userId']
+    relay = postback['data']
+    fb.child('p1').child('relays').set({'node': int(relay)})
+    relay = int(relay)
+    package_id = '6136'
+    sticker_id = randint(10551376, 10551399)
+    if relay == 3 or relay == 5:
+        line_bot_api.reply_message(replyToken, TextSendMessage(text='เปิดไฟแล้วครับ'))
+        line_bot_api.push_message(userId, StickerSendMessage(package_id=package_id, sticker_id=str(sticker_id)))
+    elif relay == 4 or relay == 6:
+        line_bot_api.reply_message(replyToken, TextSendMessage(text='ปิดไฟแล้วครับ'))
+        line_bot_api.push_message(userId, StickerSendMessage(package_id=package_id, sticker_id=str(sticker_id)))
+    elif relay == 10 or relay == 8:
+        line_bot_api.reply_message(replyToken, TextSendMessage(text='เปิดปั๊มแล้วครับ'))
+        line_bot_api.push_message(userId, StickerSendMessage(package_id=package_id, sticker_id=str(sticker_id)))
+    elif relay == 9 or relay == 7:
+        line_bot_api.reply_message(replyToken, TextSendMessage(text='ปิดปั๊มแล้วครับ'))
+        line_bot_api.push_message(userId, StickerSendMessage(package_id=package_id, sticker_id=str(sticker_id)))
 
 
 @handler.add(MessageEvent, message=TextMessage)
 def handler_message(event):
     replyToken = event.reply_token
     message_text = event.message.text
-    line_bot_api.reply_message(replyToken, TextSendMessage(text=message_text))
+    if message_text == '#sensors':
+        ref = fb.child('p1').child('sensors').get().val()
+        text = 'อุณหภูมิมีค่า : {}\nระดับน้ำมีค่า : {}\n แสงมีค่า : {}'.format(ref['temperature'], ref['level_water'],
+                                                                               ref['lux'])
+        line_bot_api.reply_message(replyToken, TextSendMessage(text=text))
+    if message_text == '#control':
+        line_bot_api.reply_message(replyToken, flex_iot())

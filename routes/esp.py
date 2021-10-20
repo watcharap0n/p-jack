@@ -121,4 +121,15 @@ async def esp_get(relay: int = None):
             'sensor': f"temperature: {ref.val()['sensors']['temperature']}"
         },
     ]
-    return data
+    return {'ref': data, 'node': ref.val()['relays']['node']}
+
+
+@router.get('/auto')
+async def esp_auto(auto: bool = None):
+    if auto:
+        res = obj(0, 0, 0, 0)
+        fb.child('p1').child('switch').update(res)
+        fb.child('p1').child('relays').child('node').set(0)
+        return {'message': 'success'}
+    else:
+        return {'message': 'success'}

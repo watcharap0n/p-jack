@@ -2,7 +2,10 @@ new Vue({
     el: '#app',
     vuetify: new Vuetify(),
     data: {
+        hiddenCard: false,
+        hiddenAuto: true,
         esp: [],
+        switch1: false,
         user: {},
         spinCard: false
     },
@@ -13,6 +16,19 @@ new Vue({
             function () {
                 this.sensors();
             }.bind(this), 5000);
+    },
+    watch: {
+        switch1(val) {
+            if (val) {
+                this.autoVal(true)
+                this.hiddenCard = true
+                this.hiddenAuto = false
+            } else {
+                this.autoVal(false)
+                this.hiddenCard = false
+                this.hiddenAuto = true
+            }
+        }
     },
     methods: {
         initializedLIFF() {
@@ -35,7 +51,13 @@ new Vue({
             this.spinCard = false
             axios.get('/esp')
                 .then((res) => {
-                    this.esp = res.data
+                    if (res.data.node === 0){
+                        this.switch1 = true
+                        this.esp = res.data.ref
+                    }
+                    else{
+                        this.esp = res.data.ref
+                    }
                     this.spinCard = true
                 })
                 .catch((err) => {
@@ -73,7 +95,7 @@ new Vue({
             axios.get('/esp')
                 .then((res) => {
                     console.log('get')
-                    this.esp = res.data
+                    this.esp = res.data.ref
                 })
                 .catch((err) => {
                     this.esp = [
@@ -141,7 +163,19 @@ new Vue({
         updateVal(val) {
             axios.get(`/esp?relay=${val}`)
                 .then((res) => {
-                    this.esp = res.data
+                    this.esp = res.data.ref
+                    this.spinCard = true
+                })
+                .catch((err) => {
+                    console.log(err)
+                    this.spinCard = true
+                })
+        },
+        autoVal(val) {
+            this.spinCard = false
+            axios.get(`esp/auto?auto=${val}`)
+                .then((res) => {
+                    console.log(res.data)
                     this.spinCard = true
                 })
                 .catch((err) => {
