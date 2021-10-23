@@ -10,6 +10,7 @@ from bson import ObjectId
 from config.db_pymongo import MongoDB
 from config.db_firebase import Config_firebase
 from config.heroku_environ import set_firebase
+from routes.esp import obj
 import datetime
 import json
 import os
@@ -101,6 +102,66 @@ def event_postback(event):
     relay = postback['data']
     fb.child('p1').child('relays').set({'node': int(relay)})
     relay = int(relay)
+    before_data = fb.child('p1').child('switch').get()
+    fb.child('p1').child('relays').set({'node': relay})
+    if relay == 1:
+        pump1 = before_data.val()['pump1']
+        pump2 = before_data.val()['pump2']
+        res = obj(1, 1, pump1, pump2)
+        fb.child('p1').child('switch').update(res)
+    elif relay == 2:
+        pump1 = before_data.val()['pump1']
+        pump2 = before_data.val()['pump2']
+        res = obj(0, 0, pump1, pump2)
+        fb.child('p1').child('switch').update(res)
+    elif relay == 3:
+        pump1 = before_data.val()['pump1']
+        pump2 = before_data.val()['pump2']
+        ls2 = before_data.val()['ls2']
+        res = obj(1, ls2, pump1, pump2)
+        fb.child('p1').child('switch').update(res)
+    elif relay == 4:
+        pump1 = before_data.val()['pump1']
+        pump2 = before_data.val()['pump2']
+        ls2 = before_data.val()['ls2']
+        res = obj(0, ls2, pump1, pump2)
+        fb.child('p1').child('switch').update(res)
+    elif relay == 5:
+        pump1 = before_data.val()['pump1']
+        pump2 = before_data.val()['pump2']
+        ls1 = before_data.val()['ls1']
+        res = obj(ls1, 1, pump1, pump2)
+        fb.child('p1').child('switch').update(res)
+    elif relay == 6:
+        pump1 = before_data.val()['pump1']
+        pump2 = before_data.val()['pump2']
+        ls1 = before_data.val()['ls1']
+        res = obj(ls1, 0, pump1, pump2)
+        fb.child('p1').child('switch').update(res)
+    elif relay == 7:
+        pump2 = before_data.val()['pump2']
+        ls1 = before_data.val()['ls1']
+        ls2 = before_data.val()['ls2']
+        res = obj(ls1, ls2, 0, pump2)
+        fb.child('p1').child('switch').update(res)
+    elif relay == 8:
+        pump2 = before_data.val()['pump2']
+        ls1 = before_data.val()['ls1']
+        ls2 = before_data.val()['ls2']
+        res = obj(ls1, ls2, 1, pump2)
+        fb.child('p1').child('switch').update(res)
+    elif relay == 9:
+        pump1 = before_data.val()['pump1']
+        ls1 = before_data.val()['ls1']
+        ls2 = before_data.val()['ls2']
+        res = obj(ls1, ls2, pump1, 0)
+        fb.child('p1').child('switch').update(res)
+    elif relay == 10:
+        pump1 = before_data.val()['pump1']
+        ls1 = before_data.val()['ls1']
+        ls2 = before_data.val()['ls2']
+        res = obj(ls1, ls2, pump1, 1)
+        fb.child('p1').child('switch').update(res)
     package_id = '6136'
     sticker_id = randint(10551376, 10551399)
     if relay == 3 or relay == 5:
