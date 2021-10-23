@@ -24,7 +24,7 @@ new Vue({
                 this.hiddenCard = true
                 this.hiddenAuto = false
             } else {
-                this.autoVal(false)
+                this.initialized()
                 this.hiddenCard = false
                 this.hiddenAuto = true
             }
