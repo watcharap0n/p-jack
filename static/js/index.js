@@ -24,11 +24,10 @@ new Vue({
                 this.hiddenCard = true
                 this.hiddenAuto = false
             } else {
-                this.autoVal(false).then(() => {
-                    this.initialized();
-                })
+                this.autoVal(false)
                 this.hiddenCard = false
                 this.hiddenAuto = true
+                this.initialized()
             }
         }
     },
@@ -53,10 +52,11 @@ new Vue({
             this.spinCard = false
             axios.get('/esp')
                 .then((res) => {
-                    if (res.data.node === 0) {
+                    if (res.data.node === 0){
                         this.switch1 = true
                         this.esp = res.data.ref
-                    } else {
+                    }
+                    else{
                         this.esp = res.data.ref
                     }
                     this.spinCard = true
